@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.axe.trace.modules.basic.mapper.ProductMapper">
+
+    <sql id="productColumns">
+        a.id AS "id",
+        a.source_area_id AS "sourceAreaId",
+        b.name AS "sourceAreaName",
+        a.name AS "name",
+        a.product_date AS "productDate",
+        a.save_date AS "saveDate",
+        a.detail AS "detail",
+        a.product_batch AS "productBatch",
+        a.video AS "video",
+        a.create_by AS "createBy",
+        a.create_time AS "createTime",
+        a.update_by AS "updateBy",
+        a.update_time AS "updateTime"
+    </sql>
+
+    <sql id="productJoins">
+        LEFT JOIN source_area b ON b.id = a.source_area_id
+    </sql>
+
+    <select id="get" resultType="Product">
+        SELECT
+            <include refid="productColumns"/>
+        FROM product a
+            <include refid="productJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Product">
+        SELECT
+            <include refid="productColumns"/>
+        FROM product a
+            <include refid="productJoins"/>
+        <where>
+            <if test="sourceAreaName != null and sourceAreaName != ''">
+                AND b.name LIKE concat('%', #{sourceAreaName}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                AND `name` LIKE concat('%', #{name}, '%')
+            </if>
+            <if test="productBatch != null and productBatch != ''">
+                AND product_batch = #{productBatch}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product(
+            source_area_id,
+            `name`,
+            product_date,
+            save_date,
+            detail,
+            product_batch,
+            video,
+            create_by,
+            create_time
+        ) VALUES (
+            #{sourceAreaId},
+            #{name},
+            #{productDate},
+            #{saveDate},
+            #{detail},
+            #{productBatch},
+            #{video},
+            #{createBy},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE product
+        <set>
+            <if test="sourceAreaId != null and sourceAreaId != ''">
+                source_area_id = #{sourceAreaId},
+            </if>
+            <if test="name != null and name != ''">
+                `name` = #{name},
+            </if>
+            <if test="productDate != null">
+                product_date = #{productDate},
+            </if>
+            <if test="saveDate != null">
+                save_date = #{saveDate},
+            </if>
+            <if test="detail != null and detail != ''">
+                detail = #{detail},
+            </if>
+            <if test="productBatch != null and productBatch != ''">
+                productBatch = #{productBatch},
+            </if>
+            <if test="video != null and video != ''">
+                video = #{video},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM product
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 保存二维码 -->
+    <update id="saveQrcode">
+      UPDATE product SET qrcode = #{qrcode} WHERE product_batch = #{productBatch}
+    </update>
+
+</mapper>

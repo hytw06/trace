@@ -1,0 +1,38 @@
+#设置端口号
+server:
+  port: 8081
+  #设置项目名
+  servlet:
+    context-path: /trace
+
+#添加数据源
+spring:
+  datasource:
+    druid:
+      db-type: mysql
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/trace?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+      username: root
+      password: Ab123456
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.axe.trace.modules.basic.**, com.axe.trace.modules.process.**, com.axe.trace.sys.**
+
+swagger:
+  enabled: true
+
+#分页pageHelper
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+
+#logging:
+#  level:
+#    com.axe.trace.modules.basic.mapper: debug

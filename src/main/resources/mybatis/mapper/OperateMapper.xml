@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.axe.trace.modules.process.mapper.OperateMapper">
+
+    <sql id="operateColumns">
+        a.id AS "id",
+        `c`.id AS "sourceAreaId",
+        `c`.name AS "sourceAreaName",
+        b.id AS "productId",
+        b.product_batch AS "productBatch",
+        b.name AS "productName",
+        a.name AS "name",
+        a.remark AS "remark",
+        a.operator AS "operator",
+        a.time AS "time",
+        a.create_by AS "createBy",
+        a.create_time AS "createTime",
+        a.update_by AS "updateBy",
+        a.update_time AS "updateTime"
+    </sql>
+
+    <sql id="operateJoins">
+        LEFT JOIN product b ON b.product_batch = a.product_batch
+        LEFT JOIN source_area `c` ON `c`.id = b.source_area_id
+    </sql>
+
+    <select id="get" resultType="Operate">
+        SELECT
+            <include refid="operateColumns"/>
+        FROM operate a
+            <include refid="operateJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Operate">
+        SELECT
+            <include refid="operateColumns"/>
+        FROM operate a
+            <include refid="operateJoins"/>
+        <where>
+            <if test="sourceAreaName != null and sourceAreaName != ''">
+                AND `c`.name LIKE concat('%', #{sourceAreaName}, '%')
+            </if>
+            <if test="productBatch != null and productBatch != ''">
+                AND b.product_batch = #{productBatch}
+            </if>
+            <if test="productName != null and productName != ''">
+                AND b.name = LIKE concat('%', #{productName}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                AND `name` LIKE concat('%', #{name}, '%')
+            </if>
+            <if test="operator != null and operator != ''">
+                AND operator LIKE concat('%', #{operator}, '%')
+            </if>
+            <if test="beginTime != null and endTime != null">
+                AND `time` between #{beginTime} AND #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO operate(
+            product_id,
+            product_batch,
+            `name`,
+            remark,
+            operator,
+            `time`,
+            create_by,
+            create_time
+        ) VALUES (
+            #{productId},
+            #{productBatch},
+            #{name},
+            #{remark},
+            #{operator},
+            #{time},
+            #{createBy},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE operate
+        <set>
+            <if test="productId != null and productId != ''">
+                product_id = #{productId},
+            </if>
+            <if test="productBatch != null and productBatch != ''">
+                product_batch = #{productBatch},
+            </if>
+            <if test="name != null and name != ''">
+                `name` = #{name},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+            <if test="operator != null and operator != ''">
+                operator = #{operator},
+            </if>
+            <if test="time != null">
+                `time` = #{time},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM operate
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

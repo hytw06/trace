@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.axe.trace.modules.basic.mapper.SourceAreaMapper">
+
+    <sql id="sourceAreaColumns">
+        a.id AS "id",
+        a.name AS "name",
+        a.address AS "address",
+        a.industry AS "industry",
+        a.belong AS "belong",
+        a.contract AS "contract",
+        a.phone AS "phone",
+        a.longitude AS "longitude",
+        a.latitude AS "latitude",
+        a.soil_quality AS "soilQuality",
+        a.air_quality AS "airQuality",
+        a.water_quality AS "waterQuality",
+        a.soil_image AS "soilImage",
+        a.air_image AS "airImage",
+        a.water_image AS "waterImage",
+        a.create_by AS "createBy",
+        a.create_time AS "createTime",
+        a.update_by AS "updateBy",
+        a.update_time AS "updateTime"
+    </sql>
+
+    <sql id="sourceAreaJoins">
+
+    </sql>
+
+    <select id="get" resultType="SourceArea">
+        SELECT
+            <include refid="sourceAreaColumns"/>
+        FROM source_area a
+            <include refid="sourceAreaJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="SourceArea">
+        SELECT
+            <include refid="sourceAreaColumns"/>
+        FROM source_area a
+            <include refid="sourceAreaJoins"/>
+        <where>
+            <if test="name != null and name != ''">
+                AND `name` LIKE concat('%', #{name}, '%')
+            </if>
+            <if test="address != null and address != ''">
+                AND address LIKE concat('%', #{address}, '%')
+            </if>
+            <if test="industry != null and industry != ''">
+                AND industry = #{industry}
+            </if>
+            <if test="belong != null and belong != ''">
+                AND belong LIKE concat('%', #{belong}, '%')
+            </if>
+            <if test="contract != null and contract != ''">
+                AND contract LIKE concat('%', #{contract}, '%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO source_area(
+            `name`,
+            address,
+            industry,
+            belong,
+            contract,
+            phone,
+            longitude,
+            latitude,
+            soil_quality,
+            air_quality,
+            water_quality,
+            soil_image,
+            air_image,
+            water_image,
+            create_by,
+            create_time
+        ) VALUES (
+            #{name},
+            #{address},
+            #{industry},
+            #{belong},
+            #{contract},
+            #{phone},
+            #{longitude},
+            #{latitude},
+            #{soilQuality},
+            #{airQuality},
+            #{waterQuality},
+            #{soilImage},
+            #{airImage},
+            #{waterImage},
+            #{createBy},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE source_area
+        <set>
+            <if test="name != null and name != ''">
+                `name` = #{name},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+            <if test="industry != null and industry != ''">
+                industry = #{industry},
+            </if>
+            <if test="belong != null and belong != ''">
+                belong = #{belong},
+            </if>
+            <if test="contract != null and contract != ''">
+                contract = #{contract},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="longitude != null">
+                longitude = #{longitude},
+            </if>
+            <if test="latitude != null">
+                latitude = #{latitude},
+            </if>
+            <if test="soilQuality != null and soilQuality != ''">
+                soil_quality = #{soilQuality},
+            </if>
+            <if test="airQuality != null and airQuality != ''">
+                air_quality = #{airQuality},
+            </if>
+            <if test="waterQuality != null and waterQuality != ''">
+                water_quality = #{waterQuality},
+            </if>
+            <if test="soilImage != null and soilImage != ''">
+                soil_image = #{soilImage},
+            </if>
+            <if test="airImage != null and airImage != ''">
+                air_image = #{airImage},
+            </if>
+            <if test="waterImage != null and waterImage != ''">
+                water_image = #{waterImage},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM source_area
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.axe.trace.modules.process.mapper.StorageMapper">
+
+    <sql id="storageColumns">
+        a.id AS "id",
+        b.id AS "productId",
+        b.product_batch AS "productBatch",
+        b.name AS "productName",
+        a.address AS "address",
+        a.count AS "count",
+        a.time AS "time",
+        a.operator AS "operator",
+        a.create_by AS "createBy",
+        a.create_time AS "createTime",
+        a.update_by AS "updateBy",
+        a.update_time AS "updateTime"
+    </sql>
+
+    <sql id="storageJoins">
+        LEFT JOIN product b ON b.product_batch = a.product_batch
+    </sql>
+
+    <select id="get" resultType="Storage">
+        SELECT
+            <include refid="storageColumns"/>
+        FROM storage a
+            <include refid="storageJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Storage">
+        SELECT
+            <include refid="storageColumns"/>
+        FROM storage a
+            <include refid="storageJoins"/>
+        <where>
+            <if test="productBatch != null and productBatch != ''">
+                AND b.product_batch = #{productBatch}
+            </if>
+            <if test="productName != null and productName != ''">
+                AND b.name LIKE concat('%', #{productName}, '%')
+            </if>
+            <if test="address != null and address != ''">
+                AND address LIKE concat('%', #{address}, '%')
+            </if>
+            <if test="beginTime != null and endTime != null">
+                AND `time` between #{beginTime} AND #{endTime}
+            </if>
+            <if test="operator != null and operator != ''">
+                AND operator LIKE concat('%', #{operator}, '%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO storage(
+            product_id,
+            product_batch,
+            address,
+            `count`,
+            `time`,
+            operator,
+            create_by,
+            create_time
+        ) VALUES (
+            #{productId},
+            #{productBatch},
+            #{address},
+            #{count},
+            #{time},
+            #{operator},
+            #{createBy},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE storage
+        <set>
+            <if test="productId != null and productId != ''">
+                product_id = #{productId},
+            </if>
+            <if test="productBatch != null and productBatch != ''">
+                product_batch = #{productBatch},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+            <if test="count != null and count != ''">
+                `count` = #{count},
+            </if>
+            <if test="time != null">
+                `time` = #{time},
+            </if>
+            <if test="operator != null and operator !=''">
+                operator = #{operator},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM storage
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

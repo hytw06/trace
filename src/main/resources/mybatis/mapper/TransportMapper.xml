@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.axe.trace.modules.process.mapper.TransportMapper">
+
+    <sql id="transportColumns">
+        a.id AS "id",
+        b.id AS "productId",
+        b.product_batch AS "productBatch",
+        b.name AS "productName",
+        a.transport_batch AS "transportBatch",
+        a.plate_number AS "plateNumber",
+        a.driver AS "driver",
+        a.phone AS "phone",
+        a.depart AS "depart",
+        a.depart_time AS "departTime",
+        a.arrive AS "arrive",
+        a.arrive_time AS "arriveTime",
+        a.create_by AS "createBy",
+        a.create_time AS "createTime",
+        a.update_by AS "updateBy",
+        a.update_time AS "updateTime"
+    </sql>
+
+    <sql id="transportJoins">
+        LEFT JOIN product b ON b.product_batch = a.product_batch
+    </sql>
+
+    <select id="get" resultType="Transport">
+        SELECT
+            <include refid="transportColumns"/>
+        FROM transport a
+            <include refid="transportJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Transport">
+        SELECT
+            <include refid="transportColumns"/>
+        FROM transport a
+            <include refid="transportJoins"/>
+        <where>
+            <if test="productBatch != null and productBatch != ''">
+                AND b.product_batch = #{productBatch}
+            </if>
+            <if test="productName != null and productName != ''">
+                AND `name` LIKE concat('%', #{productName}, '%')
+            </if>
+            <if test="transportBatch != null and transportBatch != ''">
+                AND transport_batch = #{transportBatch}
+            </if>
+            <if test="plateNumber != null and plateNumber != ''">
+                AND plate_number = #{plateNumber}
+            </if>
+            <if test="driver != null and driver != ''">
+                AND driver LIKE concat('%', #{driver}, '%')
+            </if>
+            <if test="depart != null and depart != ''">
+                AND depart LIKE concat('%', #{depart}, '%')
+            </if>
+            <if test="arrive != null and arrive != ''">
+                AND arrive LIKE concat('%', #{arrive}, '%')
+            </if>
+            <if test="beginDepartTime != null and endDepartTime != null">
+                AND depart_time BETWEEN #{beginDepartTime} AND #{endDepartTime}
+            </if>
+            <if test="beginArriveTime != null and endArriveTime != null">
+                AND arrive_time BETWEEN #{beginArriveTime} AND #{endArriveTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO transport(
+            product_id,
+            product_batch,
+            transport_batch,
+            plate_number,
+            driver,
+            phone,
+            depart,
+            depart_time,
+            arrive,
+            arrive_time,
+            create_by,
+            create_time
+        ) VALUES (
+            #{productId},
+            #{productBatch},
+            #{transportBatch},
+            #{plateNumber},
+            #{driver},
+            #{phone},
+            #{depart},
+            #{departTime},
+            #{arrive},
+            #{arriveTime},
+            #{createBy},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE transport
+        <set>
+            <if test="productId != null and productId != ''">
+                product_id = #{productId},
+            </if>
+            <if test="productBatch != null and productBatch != ''">
+                product_batch = #{productBatch},
+            </if>
+            <if test="transportBatch != null and transportBatch != ''">
+                transport_batch = #{transportBatch},
+            </if>
+            <if test="plateNumber != null and plateNumber != ''">
+                plate_number = #{plateNumber},
+            </if>
+            <if test="driver != null and driver != ''">
+                driver = #{driver},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="depart != null and depart != ''">
+                depart = #{depart},
+            </if>
+            <if test="departTime != null">
+                depart_time = #{departTime},
+            </if>
+            <if test="arrive != null and arrive != ''">
+                arrive = #{arrive},
+            </if>
+            <if test="arriveTime != null">
+                arrive_time = #{arriveTime},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM transport
+        WHERE id = #{id}
+    </delete>
+
+</mapper>
