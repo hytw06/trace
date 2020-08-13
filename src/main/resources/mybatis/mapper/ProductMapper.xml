@@ -40,7 +40,7 @@
                 AND b.name LIKE concat('%', #{sourceAreaName}, '%')
             </if>
             <if test="name != null and name != ''">
-                AND `name` LIKE concat('%', #{name}, '%')
+                AND a.name LIKE concat('%', #{name}, '%')
             </if>
             <if test="productBatch != null and productBatch != ''">
                 AND product_batch = #{productBatch}
