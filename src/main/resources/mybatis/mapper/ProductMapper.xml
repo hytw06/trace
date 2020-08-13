@@ -91,7 +91,7 @@
                 detail = #{detail},
             </if>
             <if test="productBatch != null and productBatch != ''">
-                productBatch = #{productBatch},
+                product_batch = #{productBatch},
             </if>
             <if test="video != null and video != ''">
                 video = #{video},
