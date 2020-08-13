@@ -139,7 +139,7 @@ public class ProductController extends BaseController {
             sb.append("/root/develop/files/qrcode");
             Calendar calendar = Calendar.getInstance();
             sb.append("/" + calendar.get(Calendar.YEAR));
-            sb.append("/" + calendar.get(Calendar.MONTH) + 1);
+            sb.append("/" + (calendar.get(Calendar.MONTH) + 1));
             sb.append("/" + productBatch + "qrcode.jpg");
             String destPath = sb.toString(); // 二维码图片保存路径
 
