@@ -45,7 +45,7 @@
                 AND b.product_batch = #{productBatch}
             </if>
             <if test="productName != null and productName != ''">
-                AND b.name = LIKE concat('%', #{productName}, '%')
+                AND b.name LIKE concat('%', #{productName}, '%')
             </if>
             <if test="name != null and name != ''">
                 AND a.name LIKE concat('%', #{name}, '%')
