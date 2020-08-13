@@ -48,7 +48,7 @@
                 AND b.name = LIKE concat('%', #{productName}, '%')
             </if>
             <if test="name != null and name != ''">
-                AND `name` LIKE concat('%', #{name}, '%')
+                AND a.name LIKE concat('%', #{name}, '%')
             </if>
             <if test="operator != null and operator != ''">
                 AND operator LIKE concat('%', #{operator}, '%')
