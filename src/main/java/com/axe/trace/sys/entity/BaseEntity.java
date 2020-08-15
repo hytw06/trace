@@ -14,26 +14,29 @@ public class BaseEntity implements Serializable {
     @ApiModelProperty(value="主键", name="id")
     protected String id;
 
-    @ApiModelProperty(value="页号", name="pageNum")
+    @ApiModelProperty(value="页号", name="pageNum", hidden = true)
+    @JsonIgnore
     protected Integer pageNum = 1;
 
-    @ApiModelProperty(value="页面大小", name="pageSize")
+    @ApiModelProperty(value="页面大小", name="pageSize", hidden = true)
+    @JsonIgnore
     protected Integer pageSize = 10;
 
-    @ApiModelProperty(value="排序", name="orderBy")
+    @ApiModelProperty(value="排序", name="orderBy", hidden = true)
+    @JsonIgnore
     protected String orderBy;
 
-    @ApiModelProperty(value="创建者", name="createBy")
+    @ApiModelProperty(value="创建者", name="createBy", hidden = true)
     protected String createBy;
 
     // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
-    @ApiModelProperty(value="创建时间", name="createTime")
+    @ApiModelProperty(value="创建时间", name="createTime", hidden = true)
     protected Date createTime;
 
-    @ApiModelProperty(value="更新者", name="updateBy")
+    @ApiModelProperty(value="更新者", name="updateBy", hidden = true)
     protected String updateBy;
 
-    @ApiModelProperty(value="更新时间", name="updateTime")
+    @ApiModelProperty(value="更新时间", name="updateTime", hidden = true)
     protected Date updateTime;
 
     public String getId() {
@@ -44,22 +47,18 @@ public class BaseEntity implements Serializable {
         this.id = id;
     }
 
-    @JsonIgnore
     public Integer getPageNum() {
         return pageNum;
     }
 
-    @JsonProperty
     public void setPageNum(Integer pageNum) {
         this.pageNum = pageNum;
     }
 
-    @JsonIgnore
     public Integer getPageSize() {
         return pageSize;
     }
 
-    @JsonProperty
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
