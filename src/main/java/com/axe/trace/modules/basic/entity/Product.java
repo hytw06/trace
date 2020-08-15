@@ -38,7 +38,7 @@ public class Product extends BaseEntity {
     @ApiModelProperty(value="视频", name="video")
     private String video;
 
-    @ApiModelProperty(value="保质期", name="qrcode")
+    @ApiModelProperty(value="二维码", name="qrcode")
     private String qrcode;
 
     public String getSourceAreaId() {
