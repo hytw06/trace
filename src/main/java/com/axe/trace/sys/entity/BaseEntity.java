@@ -20,6 +20,9 @@ public class BaseEntity implements Serializable {
     @ApiModelProperty(value="页面大小", name="pageSize")
     protected Integer pageSize = 10;
 
+    @ApiModelProperty(value="排序", name="orderBy")
+    protected String orderBy;
+
     @ApiModelProperty(value="创建者", name="createBy")
     protected String createBy;
 
@@ -59,6 +62,14 @@ public class BaseEntity implements Serializable {
     @JsonProperty
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
     }
 
     public String getCreateBy() {

@@ -67,6 +67,14 @@
                 AND arrive_time BETWEEN #{beginArriveTime} AND #{endArriveTime}
             </if>
         </where>
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                ORDER BY #{orderBy}
+            </when>
+            <otherwise>
+                ORDER BY createTime DESC
+            </otherwise>
+        </choose>
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
