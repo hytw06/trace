@@ -1,6 +1,7 @@
 package com.axe.trace.modules.process.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.axe.trace.modules.fabric.FabricClient;
 import com.axe.trace.modules.fabric.FabricConfig;
 import com.axe.trace.modules.fabric.FabricUserContext;
@@ -69,8 +70,8 @@ public class OperateService extends BaseService<OperateMapper, Operate> {
         List<Peer> peers = new ArrayList<>();
         peers.add(peer0);
         Orderer order = fabricClient.getOrderer(FabricConfig.ORDERER_NAME, FabricConfig.ORDERER_URL, FabricConfig.ORDER_FILE_PATH);
-
         String[] initArgs = {vo.getId(), JSON.toJSONString(vo)};
+
         fabricClient.invoke(FabricConfig.CHANNEL_NAME, TransactionRequest.Type.JAVA, "operate", order, peers, "save", initArgs);
     }
 
@@ -80,12 +81,40 @@ public class OperateService extends BaseService<OperateMapper, Operate> {
         Peer peer0 = fabricClient.getPeer(FabricConfig.ORG1_PEER0, FabricConfig.ORG1_PEER0_URL, FabricConfig.PEER_FILE_PATH1);
         List<Peer> peers = new ArrayList<>();
         peers.add(peer0);
-
         String[] initArgs = {vo.getId()};
+
         Map map = fabricClient.queryChaincode(peers, FabricConfig.CHANNEL_NAME, TransactionRequest.Type.JAVA, "operate", "query", initArgs);
         String result = (String) map.get(200);
+        // 如果没有查询到则返回null
+        if (StringUtils.isBlank(result)) {
+            return null;
+        }
         Operate operate = JSON.parseObject(result, Operate.class);
         return operate;
+    }
+
+    // 通过产品批次查询区块链
+    public List<Operate> queryChainByProductBatch(String productBatch) throws TransactionException, ProposalException, InvalidArgumentException, IOException, NoSuchAlgorithmException, InstantiationException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, CryptoException, InvalidKeySpecException, ClassNotFoundException {
+        FabricClient fabricClient = getFabricClient();
+        Peer peer0 = fabricClient.getPeer(FabricConfig.ORG1_PEER0, FabricConfig.ORG1_PEER0_URL, FabricConfig.PEER_FILE_PATH1);
+        List<Peer> peers = new ArrayList<>();
+        peers.add(peer0);
+        String[] initArgs = {productBatch};
+
+        Map map = fabricClient.queryChaincode(peers, FabricConfig.CHANNEL_NAME, TransactionRequest.Type.JAVA, "operate", "queryByProductBatch", initArgs);
+        String result = (String) map.get(200);
+        // 如果没有查询到则返回null
+        if (StringUtils.isBlank(result)) {
+            return null;
+        }
+        // 解析json数组
+        JSONArray jsonArray = JSON.parseArray(result);
+        List<Operate> operateList = new ArrayList<>();
+        for (int i=0; i<jsonArray.size(); i++) {
+            String s = jsonArray.getString(i);
+            operateList.add(JSON.parseObject(s, Operate.class));
+        }
+        return operateList;
     }
 
     // 删除区块链数据
@@ -95,7 +124,6 @@ public class OperateService extends BaseService<OperateMapper, Operate> {
         List<Peer> peers = new ArrayList<>();
         peers.add(peer0);
         Orderer order = fabricClient.getOrderer(FabricConfig.ORDERER_NAME, FabricConfig.ORDERER_URL, FabricConfig.ORDER_FILE_PATH);
-
         String[] initArgs = {vo.getId()};
 
         fabricClient.invoke(FabricConfig.CHANNEL_NAME, TransactionRequest.Type.JAVA, "operate", order, peers, "delete", initArgs);

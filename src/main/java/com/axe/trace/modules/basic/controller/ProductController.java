@@ -1,7 +1,14 @@
 package com.axe.trace.modules.basic.controller;
 
 import com.axe.trace.modules.basic.entity.Product;
+import com.axe.trace.modules.basic.entity.ProductTrace;
+import com.axe.trace.modules.basic.entity.SourceArea;
 import com.axe.trace.modules.basic.service.ProductService;
+import com.axe.trace.modules.basic.service.SourceAreaService;
+import com.axe.trace.modules.process.service.OperateService;
+import com.axe.trace.modules.process.service.QualityCheckService;
+import com.axe.trace.modules.process.service.StorageService;
+import com.axe.trace.modules.process.service.TransportService;
 import com.axe.trace.sys.controller.BaseController;
 import com.axe.trace.sys.util.AjaxJson;
 import com.axe.trace.sys.util.QRCodeUtil;
@@ -9,9 +16,17 @@ import com.axe.trace.sys.util.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.hyperledger.fabric.sdk.exception.CryptoException;
+import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
+import org.hyperledger.fabric.sdk.exception.ProposalException;
+import org.hyperledger.fabric.sdk.exception.TransactionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -22,6 +37,16 @@ public class ProductController extends BaseController {
 
     @Autowired
     private ProductService service;
+    @Autowired
+    private SourceAreaService sourceAreaService;
+    @Autowired
+    private OperateService operateService;
+    @Autowired
+    private QualityCheckService qualityCheckService;
+    @Autowired
+    private StorageService storageService;
+    @Autowired
+    private TransportService transportService;
 
     @PostMapping("/getById")
     @ResponseBody
@@ -121,7 +146,7 @@ public class ProductController extends BaseController {
     @PostMapping("/generateQRCode")
     @ResponseBody
     @ApiOperation(value = "生成二维码")
-    public AjaxJson generateQRCode(String productBatch){
+    public AjaxJson generateQRCode(String productBatch) {
         AjaxJson ajaxJson = new AjaxJson();
 
         if (StringUtils.isBlank(productBatch)) {
@@ -157,4 +182,40 @@ public class ProductController extends BaseController {
 
         return ajaxJson;
     }
+
+    @PostMapping("/productTrace")
+    @ResponseBody
+    @ApiOperation(value = "根据产品批次查询产品流程溯源信息")
+    public AjaxJson productTrace(@RequestParam(required = false) String productBatch) {
+        AjaxJson ajaxJson = new AjaxJson();
+
+        if (StringUtils.isBlank(productBatch)) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("产品批次未传入");
+        } else {
+            ProductTrace productTrace = new ProductTrace();
+
+            Product product = new Product();
+            product.setProductBatch(productBatch);
+            product = service.findList(product).get(0);
+            productTrace.setProduct(product);
+            
+            String sourceAreaId = product.getSourceAreaId();
+            SourceArea sourceArea = sourceAreaService.get(sourceAreaId);
+            productTrace.setSourceArea(sourceArea);
+
+            try {
+                productTrace.setOperateList(operateService.queryChainByProductBatch(productBatch));
+                productTrace.setQualityCheckList(qualityCheckService.queryChainByProductBatch(productBatch));
+                productTrace.setStorageList(storageService.queryChainByProductBatch(productBatch));
+                productTrace.setTransportList(transportService.queryChainByProductBatch(productBatch));
+            } catch (IOException | NoSuchAlgorithmException | InstantiationException | NoSuchMethodException | InvalidArgumentException | IllegalAccessException | InvocationTargetException | CryptoException | ClassNotFoundException | InvalidKeySpecException | ProposalException | TransactionException e) {
+                e.printStackTrace();
+            } finally {
+                ajaxJson.getBody().put("result", productTrace);
+            }
+        }
+        return ajaxJson;
+    }
+
 }

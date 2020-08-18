@@ -144,4 +144,23 @@ public class TransportController extends BaseController {
         return ajaxJson;
     }
 
+    @PostMapping("/queryChainByProductBatch")
+    @ResponseBody
+    @ApiOperation(value = "通过产品批次查询区块链")
+    public AjaxJson queryChainByProductBatch(@RequestParam(required = false) String productBatch) {
+        AjaxJson ajaxJson = new AjaxJson();
+
+        if (StringUtils.isBlank(productBatch)) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("产品批次未传入");
+        } else {
+            try {
+                ajaxJson.getBody().put("result", service.queryChainByProductBatch(productBatch));
+            } catch (IOException | NoSuchAlgorithmException | InstantiationException | NoSuchMethodException | InvalidArgumentException | IllegalAccessException | InvocationTargetException | CryptoException | ClassNotFoundException | InvalidKeySpecException | ProposalException | TransactionException e) {
+                e.printStackTrace();
+            }
+        }
+        return ajaxJson;
+    }
+
 }

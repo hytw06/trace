@@ -1,6 +1,7 @@
 package com.axe.trace.modules.process.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.axe.trace.modules.fabric.FabricClient;
 import com.axe.trace.modules.fabric.FabricConfig;
 import com.axe.trace.modules.process.entity.Transport;
@@ -88,6 +89,30 @@ public class TransportService extends BaseService<TransportMapper, Transport> {
         String result = (String) map.get(200);
         Transport transport = JSON.parseObject(result, Transport.class);
         return transport;
+    }
+
+    // 通过产品批次查询区块链
+    public List<Transport> queryChainByProductBatch(String productBatch) throws TransactionException, ProposalException, InvalidArgumentException, IOException, NoSuchAlgorithmException, InstantiationException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, CryptoException, InvalidKeySpecException, ClassNotFoundException {
+        FabricClient fabricClient = getFabricClient();
+        Peer peer0 = fabricClient.getPeer(FabricConfig.ORG1_PEER0, FabricConfig.ORG1_PEER0_URL, FabricConfig.PEER_FILE_PATH1);
+        List<Peer> peers = new ArrayList<>();
+        peers.add(peer0);
+        String[] initArgs = {productBatch};
+
+        Map map = fabricClient.queryChaincode(peers, FabricConfig.CHANNEL_NAME, TransactionRequest.Type.JAVA, "transport", "queryByProductBatch", initArgs);
+        String result = (String) map.get(200);
+        // 如果没有查询到则返回null
+        if (StringUtils.isBlank(result)) {
+            return null;
+        }
+        // 解析json数组
+        JSONArray jsonArray = JSON.parseArray(result);
+        List<Transport> transportList = new ArrayList<>();
+        for (int i=0; i<jsonArray.size(); i++) {
+            String s = jsonArray.getString(i);
+            transportList.add(JSON.parseObject(s, Transport.class));
+        }
+        return transportList;
     }
 
     // 删除区块链数据

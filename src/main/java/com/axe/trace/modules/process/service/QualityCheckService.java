@@ -1,6 +1,7 @@
 package com.axe.trace.modules.process.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.axe.trace.modules.fabric.FabricClient;
 import com.axe.trace.modules.fabric.FabricConfig;
 import com.axe.trace.modules.process.entity.QualityCheck;
@@ -83,6 +84,30 @@ public class QualityCheckService extends BaseService<QualityCheckMapper, Quality
         String result = (String) map.get(200);
         QualityCheck qualityCheck = JSON.parseObject(result, QualityCheck.class);
         return qualityCheck;
+    }
+
+    // 通过产品批次查询区块链
+    public List<QualityCheck> queryChainByProductBatch(String productBatch) throws TransactionException, ProposalException, InvalidArgumentException, IOException, NoSuchAlgorithmException, InstantiationException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, CryptoException, InvalidKeySpecException, ClassNotFoundException {
+        FabricClient fabricClient = getFabricClient();
+        Peer peer0 = fabricClient.getPeer(FabricConfig.ORG1_PEER0, FabricConfig.ORG1_PEER0_URL, FabricConfig.PEER_FILE_PATH1);
+        List<Peer> peers = new ArrayList<>();
+        peers.add(peer0);
+        String[] initArgs = {productBatch};
+
+        Map map = fabricClient.queryChaincode(peers, FabricConfig.CHANNEL_NAME, TransactionRequest.Type.JAVA, "qualityCheck", "queryByProductBatch", initArgs);
+        String result = (String) map.get(200);
+        // 如果没有查询到则返回null
+        if (StringUtils.isBlank(result)) {
+            return null;
+        }
+        // 解析json数组
+        JSONArray jsonArray = JSON.parseArray(result);
+        List<QualityCheck> qualityCheckList = new ArrayList<>();
+        for (int i=0; i<jsonArray.size(); i++) {
+            String s = jsonArray.getString(i);
+            qualityCheckList.add(JSON.parseObject(s, QualityCheck.class));
+        }
+        return qualityCheckList;
     }
 
     // 删除区块链数据
