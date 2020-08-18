@@ -17,9 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FileUtils extends org.apache.commons.io.FileUtils {
+
     private static Logger log = LoggerFactory.getLogger(FileUtils.class);
-
-
 
     /**
      * 判断是否是文件
