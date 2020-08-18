@@ -77,6 +77,12 @@
 			<version>1.2.70</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
         <!-- 二维码工具包 -->
 		<dependency>
 			<groupId>com.google.zxing</groupId>
