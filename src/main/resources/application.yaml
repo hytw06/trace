@@ -1,11 +1,11 @@
-#设置端口号
+# 设置端口号
 server:
   port: 8081
-  #设置项目名
+  # 设置项目名
   servlet:
     context-path: /trace
 
-#添加数据源
+# 添加数据源
 spring:
   datasource:
     druid:
@@ -14,6 +14,12 @@ spring:
       url: jdbc:mysql://localhost:3306/trace?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
       username: root
       password: Ab123456
+  servlet:
+    multipart:
+      enabled: true # 配置文件传输
+      file-size-threshold: 0
+      max-file-size: 50MB # 单个文件的最大上线，如果设置成-1代表不做限制
+      max-request-size: 100MB # 单个请求的文件总大小上限，如果设置成-1代表不做限制
 
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
@@ -27,7 +33,7 @@ mybatis:
 swagger:
   enabled: true
 
-#分页pageHelper
+# 分页pageHelper
 pagehelper:
   helper-dialect: mysql
   reasonable: true
