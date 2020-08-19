@@ -16,6 +16,10 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 文件操作工具类
+ * 实现文件和目录的创建、删除、复制等
+ */
 public class FileUtils extends org.apache.commons.io.FileUtils {
 
     private static Logger log = LoggerFactory.getLogger(FileUtils.class);
@@ -605,7 +609,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     }
 
     /**
-     * 获取文件类型
+     * 获取文件大小
      */
     public static String getFileSize(String fileDir){
         File file = new File(fileDir);
