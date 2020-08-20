@@ -11,7 +11,6 @@ import com.axe.trace.modules.process.service.StorageService;
 import com.axe.trace.modules.process.service.TransportService;
 import com.axe.trace.sys.controller.BaseController;
 import com.axe.trace.sys.util.AjaxJson;
-import com.axe.trace.sys.util.QRCodeUtil;
 import com.axe.trace.sys.util.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,7 +26,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Calendar;
 import java.util.Date;
 
 @RestController
@@ -140,46 +138,6 @@ public class ProductController extends BaseController {
             service.delete(service.get(id));
         }
         ajaxJson.setMsg("删除产品信息成功");
-        return ajaxJson;
-    }
-
-    @PostMapping("/generateQRCode")
-    @ResponseBody
-    @ApiOperation(value = "生成二维码")
-    public AjaxJson generateQRCode(String productBatch) {
-        AjaxJson ajaxJson = new AjaxJson();
-
-        if (StringUtils.isBlank(productBatch)) {
-            ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("产品批次未传入");
-        } else {
-            StringBuffer sb = new StringBuffer();
-            sb.append("http://fpg.axebao.com/");
-            // sb.append(productBatch);
-            String text = sb.toString(); // 保存到二维码中的内容
-
-            String imgPath = "dbnp.jpg"; // 嵌入二维码中的图片 resource/dbnp.jpg
-
-            sb.delete(0, sb.length());
-            sb.append("/root/develop/files/qrcode");
-            Calendar calendar = Calendar.getInstance();
-            sb.append("/" + calendar.get(Calendar.YEAR));
-            sb.append("/" + (calendar.get(Calendar.MONTH) + 1));
-            sb.append("/" + productBatch + "qrcode.jpg");
-            String destPath = sb.toString(); // 二维码图片保存路径
-
-            try {
-                QRCodeUtil.encode(text, imgPath, destPath, true);
-                /*String str = QRCodeUtil.decode(destPath);
-                System.out.println(str);*/
-                service.saveQrcode(productBatch, destPath);
-            } catch (Exception e) {
-                e.printStackTrace();
-                ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("二维码生成失败");
-            }
-        }
-
         return ajaxJson;
     }
 
