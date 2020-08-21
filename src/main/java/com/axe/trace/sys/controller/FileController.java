@@ -1,5 +1,6 @@
 package com.axe.trace.sys.controller;
 
+import com.axe.trace.sys.config.FileUploadConfig;
 import com.axe.trace.sys.util.AjaxJson;
 import com.axe.trace.sys.util.FileUtils;
 import com.axe.trace.sys.util.StringUtils;
@@ -44,11 +45,11 @@ public class FileController extends BaseController {
                 String fileType = FileUtils.getFileType(oldName);
                 // 视频文件
                 if (fileType.equals("video")) {
-                    fileDir = "/root/develop/files/video" + File.separator + year + File.separator + month + File.separator;
+                    fileDir = FileUploadConfig.UPLOAD_BASE_PATH + "video" + File.separator + year + File.separator + month + File.separator;
                 }
                 // 图片文件
                 else if (fileType.equals("image")) {
-                    fileDir = "/root/develop/files/image" + File.separator + year + File.separator + month + File.separator;
+                    fileDir = FileUploadConfig.UPLOAD_BASE_PATH + "image" + File.separator + year + File.separator + month + File.separator;
                 }
                 else {
                     error.append(oldName + "不支持该文件类型; ");
@@ -62,7 +63,7 @@ public class FileController extends BaseController {
                 }
                 try {
                     file.transferTo(newFile);
-                    allPath.append(newName);
+                    allPath.append(StringUtils.replace(newName, FileUploadConfig.UPLOAD_BASE_PATH, FileUploadConfig.UPLOAD_VIRTURAL_PATH));
                     // 多个文件名用"|"分隔
                     allPath.append("|");
                 } catch (IOException e) {

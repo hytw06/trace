@@ -2,6 +2,7 @@ package com.axe.trace.modules.basic.service;
 
 import com.axe.trace.modules.basic.entity.Product;
 import com.axe.trace.modules.basic.mapper.ProductMapper;
+import com.axe.trace.sys.config.FileUploadConfig;
 import com.axe.trace.sys.service.BaseService;
 import com.axe.trace.sys.util.DateUtil;
 import com.axe.trace.sys.util.QRCodeUtil;
@@ -68,7 +69,8 @@ public class ProductService extends BaseService<ProductMapper, Product> {
             String imgPath = "dbnp.jpg"; // 嵌入二维码中的图片 resource/dbnp.jpg
 
             sb.delete(0, sb.length()); // 清空StringBuffer中内容
-            sb.append("/root/develop/files/qrcode");
+            sb.append(FileUploadConfig.UPLOAD_BASE_PATH);
+            sb.append("qrcode");
             Calendar calendar = Calendar.getInstance();
             sb.append(File.separator);
             sb.append(calendar.get(Calendar.YEAR));
@@ -89,7 +91,7 @@ public class ProductService extends BaseService<ProductMapper, Product> {
             }
         }
 
-        return destPath;
+        return StringUtils.replace(destPath, FileUploadConfig.UPLOAD_BASE_PATH, FileUploadConfig.UPLOAD_VIRTURAL_PATH);
     }
 
 }
