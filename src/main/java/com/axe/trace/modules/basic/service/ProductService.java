@@ -90,7 +90,7 @@ public class ProductService extends BaseService<ProductMapper, Product> {
                 return null;
             }
         }
-
+        // 返回二维码图片的虚拟路径
         return StringUtils.replace(destPath, FileUploadConfig.UPLOAD_BASE_PATH, FileUploadConfig.UPLOAD_VIRTURAL_PATH);
     }
 

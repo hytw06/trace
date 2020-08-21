@@ -14,7 +14,7 @@ public class WebConfigurer implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 设置虚拟路径，访问绝对路径下资源
         registry.addResourceHandler(FileUploadConfig.UPLOAD_VIRTURAL_PATH + "**")
-                .addResourceLocations(FileUploadConfig.UPLOAD_BASE_PATH);
+                .addResourceLocations("file:" + FileUploadConfig.UPLOAD_BASE_PATH);
     }
 
 }
