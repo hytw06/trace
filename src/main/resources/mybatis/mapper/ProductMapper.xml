@@ -12,6 +12,8 @@
         a.detail AS "detail",
         a.product_batch AS "productBatch",
         a.video AS "video",
+        a.qrcode AS "qrcode",
+        a.trace_time AS "traceTime",
         a.create_by AS "createBy",
         a.create_time AS "createTime",
         a.update_by AS "updateBy",
@@ -65,6 +67,8 @@
             detail,
             product_batch,
             video,
+            qrcode,
+            trace_time,
             create_by,
             create_time
         ) VALUES (
@@ -75,6 +79,8 @@
             #{detail},
             #{productBatch},
             #{video},
+            #{qrcode},
+            #{traceTime},
             #{createBy},
             #{createTime}
         )
@@ -103,6 +109,12 @@
             </if>
             <if test="video != null and video != ''">
                 video = #{video},
+            </if>
+            <if test="qrcode != null and qrcode != ''">
+                qrcode = #{qrcode},
+            </if>
+            <if test="traceTime != null">
+                trace_time = #{traceTime},
             </if>
             <if test="updateBy != null and updateBy != ''">
                 update_by = #{updateBy},

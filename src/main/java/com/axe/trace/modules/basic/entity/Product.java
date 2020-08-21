@@ -41,6 +41,9 @@ public class Product extends BaseEntity {
     @ApiModelProperty(value="二维码", name="qrcode")
     private String qrcode;
 
+    @ApiModelProperty(value="溯源次数", name="traceTime")
+    private int traceTime;
+
     public String getSourceAreaId() {
         return sourceAreaId;
     }
@@ -113,4 +116,12 @@ public class Product extends BaseEntity {
         this.qrcode = qrcode;
     }
 
+    public int getTraceTime() {
+        return traceTime;
+    }
+
+    public void setTraceTime(int traceTime) {
+        this.traceTime = traceTime;
+    }
+    
 }

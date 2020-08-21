@@ -156,6 +156,9 @@ public class ProductController extends BaseController {
             Product product = new Product();
             product.setProductBatch(productBatch);
             product = service.findList(product).get(0);
+            // 每溯源一次，将溯源次数加一
+            product.setTraceTime(product.getTraceTime() + 1);
+            service.save(product);
             productTrace.setProduct(product);
             
             String sourceAreaId = product.getSourceAreaId();
