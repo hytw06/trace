@@ -13,8 +13,10 @@
         a.phone AS "phone",
         a.depart AS "depart",
         a.depart_time AS "departTime",
+        a.depart_longitude_latitude AS "departLongitudeLatitude",
         a.arrive AS "arrive",
         a.arrive_time AS "arriveTime",
+        a.arrive_longitude_latitude AS "arriveLongitudeLatitude",
         a.create_by AS "createBy",
         a.create_time AS "createTime",
         a.update_by AS "updateBy",
@@ -87,8 +89,10 @@
             phone,
             depart,
             depart_time,
+            depart_longitude_latitude,
             arrive,
             arrive_time,
+            arrive_longitude_latitude,
             create_by,
             create_time
         ) VALUES (
@@ -100,8 +104,10 @@
             #{phone},
             #{depart},
             #{departTime},
+            #{departLongitudeLatitude},
             #{arrive},
             #{arriveTime},
+            #{arriveLongitudeLatitude},
             #{createBy},
             #{createTime}
         )
@@ -134,11 +140,17 @@
             <if test="departTime != null">
                 depart_time = #{departTime},
             </if>
+            <if test="departLongitudeLatitude != null and departLongitudeLatitude != ''">
+                depart_longitude_latitude = #{departLongitudeLatitude},
+            </if>
             <if test="arrive != null and arrive != ''">
                 arrive = #{arrive},
             </if>
             <if test="arriveTime != null">
                 arrive_time = #{arriveTime},
+            </if>
+            <if test="arriveLongitudeLatitude != null and arriveLongitudeLatitude != ''">
+                arrive_longitude_latitude = #{arriveLongitudeLatitude},
             </if>
             <if test="updateBy != null and updateBy != ''">
                 update_by = #{updateBy},

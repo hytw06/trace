@@ -39,11 +39,17 @@ public class Transport extends BaseEntity {
     @ApiModelProperty(value="出发时间", name="departTime")
     private Date departTime;
 
+    @ApiModelProperty(value="出发地经纬度", name="departLongitudeLatitude")
+    private String departLongitudeLatitude;
+
     @ApiModelProperty(value="到达地", name="arrive")
     private String arrive;
 
     @ApiModelProperty(value="到达时间", name="arriveTime")
     private Date arriveTime;
+
+    @ApiModelProperty(value="到达地经纬度", name="arriveLongitudeLatitude")
+    private String arriveLongitudeLatitude;
 
     @ApiModelProperty(value="起始出发时间（用于查询）", name="beginDepartTime")
     private Date beginDepartTime;
@@ -129,6 +135,14 @@ public class Transport extends BaseEntity {
         this.departTime = departTime;
     }
 
+    public String getDepartLongitudeLatitude() {
+        return departLongitudeLatitude;
+    }
+
+    public void setDepartLongitudeLatitude(String departLongitudeLatitude) {
+        this.departLongitudeLatitude = departLongitudeLatitude;
+    }
+
     public String getArrive() {
         return arrive;
     }
@@ -143,6 +157,14 @@ public class Transport extends BaseEntity {
 
     public void setArriveTime(Date arriveTime) {
         this.arriveTime = arriveTime;
+    }
+
+    public String getArriveLongitudeLatitude() {
+        return arriveLongitudeLatitude;
+    }
+
+    public void setArriveLongitudeLatitude(String arriveLongitudeLatitude) {
+        this.arriveLongitudeLatitude = arriveLongitudeLatitude;
     }
 
     public Date getBeginDepartTime() {
