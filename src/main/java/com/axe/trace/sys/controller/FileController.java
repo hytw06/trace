@@ -64,7 +64,7 @@ public class FileController extends BaseController {
                 try {
                     file.transferTo(newFile);
                     // 保存文件虚拟路径
-                    allPath.append(StringUtils.replace(newName, FileUploadConfig.UPLOAD_BASE_PATH, FileUploadConfig.UPLOAD_VIRTURAL_PATH));
+                    allPath.append(StringUtils.replace(newName, FileUploadConfig.UPLOAD_BASE_PATH, FileUploadConfig.SERVER_IP_PORT));
                     // 多个文件名用"|"分隔
                     allPath.append("|");
                 } catch (IOException e) {
