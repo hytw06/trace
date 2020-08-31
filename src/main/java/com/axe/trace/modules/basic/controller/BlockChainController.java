@@ -52,8 +52,8 @@ public class BlockChainController extends BaseController {
             BlockchainInfo blockchainInfo = channel.queryBlockchainInfo();
             long height = blockchainInfo.getHeight();
             blockchainInformation.setHeight(height);
-            blockchainInformation.setCurrentBlockHash(new String(blockchainInfo.getCurrentBlockHash()));
-            blockchainInformation.setPreviousBlockHash(new String(blockchainInfo.getPreviousBlockHash()));
+            blockchainInformation.setCurrentBlockHash(blockchainInfo.getCurrentBlockHash());
+            blockchainInformation.setPreviousBlockHash(blockchainInfo.getPreviousBlockHash());
             long totalTransactionCount = 0;
 
             // 遍历每个区块的交易数，计算总交易数

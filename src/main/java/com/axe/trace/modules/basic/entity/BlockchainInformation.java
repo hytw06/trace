@@ -13,10 +13,10 @@ public class BlockchainInformation {
     private long height;
 
     @ApiModelProperty(value="当前区块哈希", name="currentBlockHash")
-    private String currentBlockHash;
+    private byte[] currentBlockHash;
 
     @ApiModelProperty(value="上个区块哈希", name="previousBlockHash")
-    private String previousBlockHash;
+    private byte[] previousBlockHash;
 
     @ApiModelProperty(value="所有区块总交易数", name="totalTransactionCount")
     private long totalTransactionCount;
@@ -29,19 +29,19 @@ public class BlockchainInformation {
         this.height = height;
     }
 
-    public String getCurrentBlockHash() {
+    public byte[] getCurrentBlockHash() {
         return currentBlockHash;
     }
 
-    public void setCurrentBlockHash(String currentBlockHash) {
+    public void setCurrentBlockHash(byte[] currentBlockHash) {
         this.currentBlockHash = currentBlockHash;
     }
 
-    public String getPreviousBlockHash() {
+    public byte[] getPreviousBlockHash() {
         return previousBlockHash;
     }
 
-    public void setPreviousBlockHash(String previousBlockHash) {
+    public void setPreviousBlockHash(byte[] previousBlockHash) {
         this.previousBlockHash = previousBlockHash;
     }
 
